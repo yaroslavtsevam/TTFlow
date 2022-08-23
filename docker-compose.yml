@@ -1,4 +1,5 @@
-version: "3.9"
+version: '3.9'
+
 services:
   php:
     build: ./docker/php
@@ -15,7 +16,7 @@ services:
     build: ./docker/telebot 
     volumes:
       - ./telebot:/usr/src/app/
-    working_dir: /usr/src/app/
+    working_dir: /usr/src/app/ 
     command: python3 /usr/src/app/consumer.py
   rabbit:
     image: rabbitmq:3.10.7-management-alpine
@@ -23,3 +24,66 @@ services:
       - "15672:15672" # login and password guest
       - "5672:5672"
       - "5671:5671"
+  web:
+    build:
+      context: ./docker/flask
+    command: gunicorn --bind 0.0.0.0:5000 app:server
+    volumes:
+      - ./shared_folders/static_volume:/home/app/web/project/static
+      - ./shared_folders/media_volume:/home/app/web/project/media
+      - ./flask:/usr/src/app
+    expose:
+      - 5000
+    env_file:
+      - ./flask/.env.prod
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - ./shared_folders/postgres_data_prod:/var/lib/postgresql/data/
+    env_file:
+      - .env.prod.db
+  nginx:
+    build: ./docker/nginx
+    volumes:
+      - ./shared_folders/static_volume:/home/app/web/project/static
+      - ./shared_folders/media_volume:/home/app/web/project/media
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_data_prod:
+  static_volume:
+  media_volume:
+
+
+
+
+#version: "3.9"
+#services:
+#  php:
+#    build: ./docker/php
+    #image: php:8.1.9-cli
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./php_listner/files:/app
+#    command: php -S 0.0.0.0:8080 -t /app
+#    working_dir: /app
+#    depends_on:
+#      - rabbit
+#  telebot:
+#    build: ./docker/telebot 
+#    volumes:
+#      - ./telebot:/usr/src/app/
+#    working_dir: /usr/src/app/
+#    command: python3 /usr/src/app/consumer.py
+#  rabbit:
+#    image: rabbitmq:3.10.7-management-alpine
+#    ports:
+#      - "15672:15672" # login and password guest
+#      - "5672:5672"
+#      - "5671:5671"

@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.9.5-slim-buster
 
 RUN pip install pika
 RUN pip install python-telegram-bot --upgrade
@@ -14,4 +14,4 @@ WORKDIR /usr/src/app
 
 # When you just 'docker run publisher' with no command afterwards,
 # default to this:
-#CMD ["python", "/usr/src/app/consumer.py"]
+#CMD ["python", "/usr/src/apasp/consumer.py"]
