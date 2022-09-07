@@ -50,9 +50,17 @@ services:
       - ./shared_folders/static_volume:/home/app/web/project/static
       - ./shared_folders/media_volume:/home/app/web/project/media
     ports:
-      - 1337:80
+      - 80:80
     depends_on:
       - web
+  r-server:
+    build: plumbeR/.
+    volumes:
+     - ./plumbeR/app:/app
+    entrypoint: R -e 'source("/app/plumber.R")'
+    restart: always
+    ports:
+     - "8881:8881"
 
 volumes:
   postgres_data_prod:
