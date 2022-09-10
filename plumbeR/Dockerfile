@@ -1,4 +1,12 @@
-FROM r-base:4.2.1
+FROM rocker/tidyverse:4.2.1
+
+RUN apt-get update
+RUN apt-get upgrade -y
+RUN apt-get install libcurl4-openssl-dev -y
+RUN apt-get install libxml2-dev -y
+RUN apt-get install libssl-dev -y
+RUN apt-get install libfontconfig1-dev -y
+RUN apt-get install libudunits2-dev -y
 
 RUN R -e "install.packages('plyr')"
 RUN R -e "install.packages('taskscheduleR')"
@@ -18,3 +26,10 @@ RUN R -e "install.packages('Rcpp')"
 RUN R -e "install.packages('DescTools')"
 RUN R -e "install.packages('zoo')"
 RUN R -e "install.packages('baytrends')"
+RUN R -e "install.packages('future')"
+RUN R -e "install.packages('dbplyr')"
+RUN R -e "install.packages('RPostgres')"
+RUN R -e "install.packages('RPostgreSQL')"
+RUN R -e "install.packages('DBI')"
+
+EXPOSE 8888

@@ -5,4 +5,4 @@ TTdat = ttscrape(
   custom_url = "http://naturetalkers.altervista.org/C18AC097/ttcloud.txt",
   to_process = T)
 
-write.csv(TTdat$mydata_exp, file="/app/data/skb_data.csv")
+#write.csv(TTdat$mydata_exp, file="/app/data/skb_data.csv")
