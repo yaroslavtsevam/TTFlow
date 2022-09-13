@@ -7,8 +7,13 @@ from flask import Flask
 import pandas as pd
 import dash
 
+
+
+
+
+
 server = Flask(__name__)
-app = dash.Dash(server=server, external_stylesheets=[dbc.themes.FLATLY])
+app = dash.Dash(server=server, external_stylesheets=[dbc.themes.FLATLY], use_pages = True)
 app.title = 'Dashboard'
 
 df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv')
@@ -24,8 +29,14 @@ app.layout = dbc.Container([
                                                     value=df['year'].min(),
                                                     marks={str(year): str(year) for year in df['year'].unique()},
                                                     step=None)
-                                        ], color = '#000000', type = 'dot', fullscreen=True ) ))
+                                        ], color = '#000000', type = 'dot', fullscreen=True ) )),
+    dash.page_container
+    # Print the DataFrame
+    
 ])
+
+
+
 
 @app.callback(
     Output('your-graph', 'figure'),
@@ -38,7 +49,6 @@ def update_figure(selected_year):
                      log_x=True, size_max=55)
 
     fig.update_layout(transition_duration=500)
-
     return fig
 
 if __name__=='__main__':

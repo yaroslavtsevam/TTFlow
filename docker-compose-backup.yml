@@ -1,0 +1,168 @@
+version: '3.9'
+
+services:
+  php:
+    container_name: php_parser
+    hostname: php_parser
+    build: ./docker/php
+    #image: php:8.1.9-cli
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./php_listner/files:/app
+    command: php -S 0.0.0.0:8080 -t /app
+    working_dir: /app
+    depends_on:
+      - rabbit
+  telebot:
+    build: ./docker/telebot 
+    volumes:
+      - ./telebot:/usr/src/app/
+    working_dir: /usr/src/app/ 
+    command: python3 /usr/src/app/consumer.py
+  rabbit:
+    image: rabbitmq:3.10.7-management-alpine
+    ports:
+      - "15672:15672" # login and password guest
+      - "5672:5672"
+      - "5671:5671"
+  web:
+    container_name: flask
+    hostname: flask
+    build:
+      context: ./docker/flask
+    command: gunicorn --bind 0.0.0.0:5000 app:server
+    volumes:
+      - ./shared_folders/static_volume:/home/app/web/project/static
+      - ./shared_folders/media_volume:/home/app/web/project/media
+      - ./flask:/usr/src/app
+    expose:
+      - 5000
+    env_file:
+      - ./flask/.env.prod
+    depends_on:
+      - db
+  db:
+    container_name: postgre-db
+    hostname: postgre-db
+    image: postgres:13-alpine
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
+    volumes:
+      - ./shared_folders/postgres_data_prod:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hello_flask -d hello_flask_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.prod.db
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:5.7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "yaroslavtsevam@gmail.com.com"
+      PGADMIN_DEFAULT_PASSWORD: "pgadmin"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+  nginx:
+    container_name: nginx
+    hostname: nginx
+    build: ./docker/nginx
+    volumes:
+      - ./shared_folders/static_volume:/home/app/web/project/static
+      - ./shared_folders/media_volume:/home/app/web/project/media
+    ports:
+      - 80:80
+    depends_on:
+      - web
+  r-server:
+    container_name: r_server
+    hostname: r_server
+    build: plumbeR/.
+    volumes:
+     - ./plumbeR/app:/app
+    entrypoint: R -e 'source("/app/plumber.R")'
+    restart: always
+    ports:
+     - "8888:8888"
+     
+
+volumes:
+  postgres_data_prod:
+  static_volume:
+  media_volume:
+
+
+
+#version: "3.9"
+#services:
+#  php:
+#    build: ./docker/php
+    #image: php:8.1.9-cli
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./php_listner/files:/app
+#    command: php -S 0.0.0.0:8080 -t /app
+#    working_dir: /app
+#    depends_on:
+#      - rabbit
+#  telebot:
+#    build: ./docker/telebot 
+#    volumes:
+#      - ./telebot:/usr/src/app/
+#    working_dir: /usr/src/app/
+#    command: python3 /usr/src/app/consumer.py
+#  rabbit:
+#    image: rabbitmq:3.10.7-management-alpine
+#    ports:
+#      - "15672:15672" # login and password guest
+#      - "5672:5672"
+#      - "5671:5671"

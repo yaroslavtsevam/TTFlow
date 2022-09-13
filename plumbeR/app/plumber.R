@@ -1,8 +1,11 @@
 library(plumber)
-library(future)
 library(dbplyr)
 library(RPostgres)
 library(DBI)
+library(promises)
+library(future)
+library(RPostgreSQL)
+plan(multisession)
 
 source("/app/R/ttscrape.R")
 source("/app/R/ttexport.R")

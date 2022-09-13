@@ -1,0 +1,26 @@
+[2022-09-12T22:55:00.735+0000] {taskinstance.py:1171} INFO - Dependencies all met for <TaskInstance: basic_cloud_scheduler_dag.hourly_cloud_calc scheduled__2022-09-12T21:55:00+00:00 [queued]>
+[2022-09-12T22:55:00.743+0000] {taskinstance.py:1171} INFO - Dependencies all met for <TaskInstance: basic_cloud_scheduler_dag.hourly_cloud_calc scheduled__2022-09-12T21:55:00+00:00 [queued]>
+[2022-09-12T22:55:00.743+0000] {taskinstance.py:1368} INFO - 
+--------------------------------------------------------------------------------
+[2022-09-12T22:55:00.743+0000] {taskinstance.py:1369} INFO - Starting attempt 1 of 1
+[2022-09-12T22:55:00.744+0000] {taskinstance.py:1370} INFO - 
+--------------------------------------------------------------------------------
+[2022-09-12T22:55:00.754+0000] {taskinstance.py:1389} INFO - Executing <Task(SimpleHttpOperator): hourly_cloud_calc> on 2022-09-12 21:55:00+00:00
+[2022-09-12T22:55:00.759+0000] {standard_task_runner.py:52} INFO - Started process 15176 to run task
+[2022-09-12T22:55:00.761+0000] {standard_task_runner.py:79} INFO - Running: ['***', 'tasks', 'run', 'basic_cloud_scheduler_dag', 'hourly_cloud_calc', 'scheduled__2022-09-12T21:55:00+00:00', '--job-id', '27', '--raw', '--subdir', 'DAGS_FOLDER/basic_cloud_scheduler_dag.py', '--cfg-path', '/tmp/tmpx6_lm85j', '--error-file', '/tmp/tmp0xzp7g1f']
+[2022-09-12T22:55:00.761+0000] {standard_task_runner.py:80} INFO - Job 27: Subtask hourly_cloud_calc
+[2022-09-12T22:55:00.810+0000] {task_command.py:371} INFO - Running <TaskInstance: basic_cloud_scheduler_dag.hourly_cloud_calc scheduled__2022-09-12T21:55:00+00:00 [running]> on host a864557ec328
+[2022-09-12T22:55:00.874+0000] {taskinstance.py:1583} INFO - Exporting the following env vars:
+AIRFLOW_CTX_DAG_OWNER=***
+AIRFLOW_CTX_DAG_ID=basic_cloud_scheduler_dag
+AIRFLOW_CTX_TASK_ID=hourly_cloud_calc
+AIRFLOW_CTX_EXECUTION_DATE=2022-09-12T21:55:00+00:00
+AIRFLOW_CTX_TRY_NUMBER=1
+AIRFLOW_CTX_DAG_RUN_ID=scheduled__2022-09-12T21:55:00+00:00
+[2022-09-12T22:55:00.874+0000] {http.py:121} INFO - Calling HTTP method
+[2022-09-12T22:55:00.882+0000] {base.py:68} INFO - Using connection ID 'cloud_calc' for task execution.
+[2022-09-12T22:55:00.883+0000] {http.py:148} INFO - Sending 'GET' to url: http://r_server:8888/cloud/C18AC097
+[2022-09-12T22:55:02.084+0000] {http.py:125} INFO - {"success":["The request has been queued. You will receive an email when the process is complete."]}
+[2022-09-12T22:55:02.111+0000] {taskinstance.py:1412} INFO - Marking task as SUCCESS. dag_id=basic_cloud_scheduler_dag, task_id=hourly_cloud_calc, execution_date=20220912T215500, start_date=20220912T225500, end_date=20220912T225502
+[2022-09-12T22:55:02.136+0000] {local_task_job.py:156} INFO - Task exited with return code 0
+[2022-09-12T22:55:02.163+0000] {local_task_job.py:279} INFO - 0 downstream tasks scheduled from follow-on schedule check
