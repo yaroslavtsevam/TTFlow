@@ -12,14 +12,14 @@ UploadCalculatedCloudDataToDB = function(cloud){
     library(RPostgres)
     library(RPostgreSQL)
     library(DBI)
-    library(promises)
-    library(future)
+    
     DBI::dbDriver("PostgreSQL")
     drv <- dbDriver("PostgreSQL")
     # create a connection to the postgres database
     con <- RPostgreSQL::dbConnect(drv, dbname = "hello_flask_prod",
                                 host = "postgre-db", port = 5432,
                                 user = "hello_flask", password = "hello_flask")
+    print("DB connected!")
     dbGetQuery(con, CreateSchemaifnotExistQuery(cloud))
     for(table_name in names(TTdat)){
       print(table_name)
@@ -37,7 +37,7 @@ function(res,cloud) {
   
   future_promise({
     print("Calculation started...")
-    UploadCalculatedCloudDataToDB(cloud)
+    #UploadCalculatedCloudDataToDB(cloud)
     print("Calculation is over!")
   }) %>%
     finally(~ {

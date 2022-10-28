@@ -24,7 +24,7 @@ with DAG('basic_cloud_scheduler_dag',
         hourlycalc = SimpleHttpOperator(
             task_id='hourly_cloud_calc',
             http_conn_id='cloud_calc',
-            endpoint='/C18AC097',
+            endpoint='/C3ACAD01',
             method='GET',
             log_response=True
         )
